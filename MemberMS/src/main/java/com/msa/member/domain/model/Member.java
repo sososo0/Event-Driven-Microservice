@@ -15,10 +15,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Member {
+
     private Long MemberNo;
-      private IDName idName;
-      private PassWord password;
-      private Email email;
-      private List<Authority> authorites = new ArrayList<Authority>();
-      private MemberPoint point;
+    private IDName idName;
+    private PassWord password;
+    private Email email;
+    private List<Authority> authorities = new ArrayList<Authority>();
+    private MemberPoint point;
 }
