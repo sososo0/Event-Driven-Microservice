@@ -1,10 +1,13 @@
 package com.msa.rental.domain.model;
 
+import com.msa.rental.domain.model.event.ItemRented;
+import com.msa.rental.domain.model.event.ItemReturned;
+import com.msa.rental.domain.model.event.OverdueCleared;
 import com.msa.rental.domain.model.vo.IDName;
 import com.msa.rental.domain.model.vo.Item;
 import com.msa.rental.domain.model.vo.LateFee;
-import com.msa.rental.domain.model.vo.RentStatus;
 import com.msa.rental.domain.model.vo.RentalCardNo;
+import com.msa.rental.domain.model.vo.RentStatus;
 import com.msa.rental.domain.model.vo.ReturnItem;
 import java.time.LocalDate;
 import java.time.Period;
@@ -88,7 +91,8 @@ public class RentalCard {
     }
 
     public RentalCard returnItem(Item item, LocalDate returnDate) {
-        RentalItem rentalItem = this.rentalItemList.stream().filter(i -> i.getItem().equals(item)).findFirst().get();
+        RentalItem rentalItem = this.rentalItemList.stream().filter(i -> i.getItem().equals(item))
+            .findFirst().get();
         calculateLateFee(rentalItem, returnDate);
         this.addReturnItem(ReturnItem.createReturnItem(rentalItem));
         this.removeRentalItem(rentalItem);
@@ -96,7 +100,7 @@ public class RentalCard {
     }
 
     private void calculateLateFee(RentalItem rentalItem, LocalDate returnDate) {
-        if(returnDate.compareTo(rentalItem.getExpectedReturnDate()) > 0) {
+        if (returnDate.compareTo(rentalItem.getExpectedReturnDate()) > 0) {
             long point;
             point = Period.between(rentalItem.getExpectedReturnDate(), returnDate).getDays() * 10;
             LateFee addPoint = this.lateFee.addPoint(point);
@@ -105,7 +109,8 @@ public class RentalCard {
     }
 
     public RentalCard overdueItem(Item item) {
-        RentalItem rentalItem = this.rentalItemList.stream().filter(i -> i.getItem().equals(item)).findFirst().get();
+        RentalItem rentalItem = this.rentalItemList.stream().filter(i -> i.getItem().equals(item))
+            .findFirst().get();
         rentalItem.setOverdued(true);
         this.rentStatus = RentStatus.RENT_UNAVAILABLE;
 
@@ -130,5 +135,17 @@ public class RentalCard {
         }
 
         return this.getLateFee().getPoint();
+    }
+
+    public static ItemRented createItemRentedEvent(IDName idName, Item item, long point) {
+        return new ItemRented(idName, item, point);
+    }
+
+    public static ItemReturned createItemReturnEvent(IDName idName, Item item, long point) {
+        return new ItemReturned(idName, item, point);
+    }
+
+    public static OverdueCleared createOverdueCleardEvent(IDName idName, long point) {
+        return new OverdueCleared(idName, point);
     }
 }
