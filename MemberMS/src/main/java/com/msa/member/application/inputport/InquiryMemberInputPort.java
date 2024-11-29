@@ -2,7 +2,7 @@ package com.msa.member.application.inputport;
 
 import com.msa.member.application.usecase.InquiryMemberUseCase;
 import com.msa.member.domain.model.Member;
-import com.msa.member.framework.jpaadapter.MemberOutputPort;
+import com.msa.member.application.outputport.MemberOutputPort;
 import com.msa.member.framework.web.dto.MemberOutPutDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -8,6 +8,12 @@ import com.msa.member.domain.model.vo.PassWord;
 import com.msa.member.domain.model.vo.UserRole;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +21,26 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Member {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long MemberNo;
+
+    @Embedded
     private IDName idName;
+
+    @Embedded
     private PassWord password;
+
+    @Embedded
     private Email email;
+
+    @ElementCollection
     private List<Authority> authorities = new ArrayList<Authority>();
+
+    @Embedded
     private MemberPoint point;
 
     public static Member registerMember(IDName idName, PassWord pwd, Email email) {

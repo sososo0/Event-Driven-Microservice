@@ -5,7 +5,7 @@ import com.msa.member.domain.model.Member;
 import com.msa.member.domain.model.vo.Email;
 import com.msa.member.domain.model.vo.IDName;
 import com.msa.member.domain.model.vo.PassWord;
-import com.msa.member.framework.jpaadapter.MemberOutputPort;
+import com.msa.member.application.outputport.MemberOutputPort;
 import com.msa.member.framework.web.dto.MemberInfoDTO;
 import com.msa.member.framework.web.dto.MemberOutPutDTO;
 import lombok.RequiredArgsConstructor;
