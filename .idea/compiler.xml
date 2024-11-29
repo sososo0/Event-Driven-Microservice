@@ -8,11 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Rental" />
         <module name="Member" />
+        <module name="Rental (1)" />
         <module name="Book" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Rental (1)" target="11" />
       <module name="Rental (2)" target="11" />
     </bytecodeTargetLevel>
   </component>
