@@ -38,3 +38,13 @@ server:
 logging:
   level:
     org.hibernate.SQL: debug
+
+consumer:
+  topic1:
+    name: rental_rent
+  topic2:
+    name: rental_return
+  topic3:
+    name: overdue_clear
+  groupid:
+    name: member
