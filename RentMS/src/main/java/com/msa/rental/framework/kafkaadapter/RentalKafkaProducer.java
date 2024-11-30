@@ -19,13 +19,13 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @RequiredArgsConstructor
 public class RentalKafkaProducer implements EventOutputPort {
 
-    @Value(value = "${producers.topic1.name}")
+    @Value(value = "${producer.topic1.name}")
     private String TOPIC_RENT;
 
-    @Value(value = "${producers.topic2.name}")
+    @Value(value = "${producer.topic2.name}")
     private String TOPIC_RETURN;
 
-    @Value(value = "${producers.topic3.name}")
+    @Value(value = "${producer.topic3.name}")
     private String TOPIC_CLEAR;
 
     private final KafkaTemplate<String, ItemRented> kafkaTemplate1;

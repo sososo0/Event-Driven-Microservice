@@ -29,7 +29,7 @@ logging:
   level:
     org.hibernate.SQL: debug
 
-producers:
+producer:
   bootstrap-servers: localhost:9092
   topic1:
     name: rental_rent

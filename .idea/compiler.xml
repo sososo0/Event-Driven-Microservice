@@ -8,16 +8,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Rental" />
         <module name="Member" />
-        <module name="Rental (1)" />
         <module name="Book" />
+        <module name="BestBook" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Rental (1)" target="11" />
       <module name="Rental (2)" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BestBook" options="-parameters" />
       <module name="Book" options="-parameters" />
       <module name="Member" options="-parameters" />
       <module name="Rental" options="-parameters" />
