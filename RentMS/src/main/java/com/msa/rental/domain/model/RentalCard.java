@@ -148,4 +148,31 @@ public class RentalCard {
     public static OverdueCleared createOverdueCleardEvent(IDName idName, long point) {
         return new OverdueCleared(idName, point);
     }
+
+    public RentalCard cancelRentItem(Item item) throws Exception {
+        RentalItem rentalItem = this.rentalItemList.stream().filter(i -> i.getItem().equals(item))
+            .findFirst().get();
+
+        this.removeRentalItem(rentalItem);
+        return this;
+    }
+
+    public RentalCard cancelReturnItem(Item item) throws Exception {
+        ReturnItem returnItem = this.returnItemList.stream().filter(i -> i.getRentalItem().getItem()
+            .equals(item)).findFirst().get();
+
+        this.addRentalItem(returnItem.getRentalItem());
+        this.removeReturnItem(returnItem);
+        return this;
+    }
+
+    private void removeReturnItem(ReturnItem returnItem) {
+        this.getReturnItemList().remove(returnItem);
+    }
+
+    public long cancelMakeAvailableRental(long point) throws Exception {
+        this.setLateFee(lateFee.addPoint(point));
+        this.rentStatus = RentStatus.RENT_UNAVAILABLE;
+        return this.lateFee.getPoint();
+    }
 }
