@@ -5,7 +5,9 @@ import com.msa.rental.domain.model.vo.Item;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class ItemRented implements Serializable {

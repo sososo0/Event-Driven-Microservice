@@ -19,7 +19,6 @@ public class AddBookInputPort implements AddBookUseCase {
 
     private final BookOutputPort bookOutputPort;
 
-
     @Override
     public BookOutputDTO addBook(BookInfoDTO bookInfoDTO) {
         Book book = Book.enterBook(
