@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EventOutputPort {
-    public void occurRentalEvent(ItemRented rentalItemEvent) throws JsonProcessingException;
-    public void occurReturnEvent(ItemReturned returnItemEvent) throws JsonProcessingException;
+    public void occurRentalEvent(ItemRented rentalItem) throws JsonProcessingException;
+    public void occurReturnEvent(ItemReturned returnItem) throws JsonProcessingException;
     public void occurOverdueClearedEvent(OverdueCleared overdueCleared) throws JsonProcessingException;
 }
