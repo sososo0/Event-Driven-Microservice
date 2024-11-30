@@ -29,6 +29,13 @@ logging:
   level:
     org.hibernate.SQL: debug
 
+kafka:
+  bootstrapAddress: localhost:9092
+
+producer:
+  topic1:
+    name: rental_result
+
 consumer:
   topic1:
     name: rental_rent
