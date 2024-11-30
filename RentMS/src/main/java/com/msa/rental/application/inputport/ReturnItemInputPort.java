@@ -1,5 +1,6 @@
 package com.msa.rental.application.inputport;
 
+import com.msa.rental.application.outputport.EventOutputPort;
 import com.msa.rental.application.outputport.RentalCardOutputPort;
 import com.msa.rental.application.usecase.ReturnItemUseCase;
 import com.msa.rental.domain.model.RentalCard;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReturnItemInputPort implements ReturnItemUseCase {
 
     private final RentalCardOutputPort rentalCardOutputPort;
+    private final EventOutputPort eventOutputPort;
 
     @Override
     public RentalCardOutputDTO returnItem(UserItemInputDTO returnDTO) throws Exception {
@@ -25,7 +27,10 @@ public class ReturnItemInputPort implements ReturnItemUseCase {
             .orElseThrow(() -> new IllegalArgumentException("해당 카드가 존재하지 않습니다."));
 
         Item returnItem = new Item(returnDTO.getItemId(), returnDTO.getItemTitle());
-        rentalCard.returnItem(returnItem, LocalDate.now());
+        rentalCard = rentalCard.returnItem(returnItem, LocalDate.now());
+
+        eventOutputPort.occurReturnEvent(RentalCard.createItemReturnEvent(rentalCard.getMember(), returnItem, 10L));
+
         // 변경 감지에 의해 save는 사용하지 않음
         return RentalCardOutputDTO.mapToDTO(rentalCard);
     }

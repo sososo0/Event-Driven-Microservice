@@ -1,8 +1,10 @@
 package com.msa.rental.application.inputport;
 
+import com.msa.rental.application.outputport.EventOutputPort;
 import com.msa.rental.application.outputport.RentalCardOutputPort;
 import com.msa.rental.application.usecase.RentItemUseCase;
 import com.msa.rental.domain.model.RentalCard;
+import com.msa.rental.domain.model.event.ItemRented;
 import com.msa.rental.domain.model.vo.IDName;
 import com.msa.rental.domain.model.vo.Item;
 import com.msa.rental.framework.web.dto.UserItemInputDTO;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RentItemInputPort implements RentItemUseCase {
 
     private final RentalCardOutputPort rentalCardOutputPort;
+    private final EventOutputPort eventOutputPort;
 
     @Override
     public RentalCardOutputDTO rentItem(UserItemInputDTO rental) throws Exception {
@@ -26,7 +29,11 @@ public class RentItemInputPort implements RentItemUseCase {
 
         Item newItem = new Item(rental.getItemId(), rental.getItemTitle());
         rentalCard.rentItem(newItem);
-        RentalCard savedRentalCard = rentalCardOutputPort.save(rentalCard);
-        return RentalCardOutputDTO.mapToDTO(savedRentalCard);
+
+        // 대여 이벤트 생성 및 트리거
+        ItemRented itemRentedEvent = RentalCard.createItemRentedEvent(rentalCard.getMember(), newItem, 10L);
+        eventOutputPort.occurRentalEvent(itemRentedEvent);
+
+        return RentalCardOutputDTO.mapToDTO(rentalCard);
     }
 }

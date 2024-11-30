@@ -1,5 +1,6 @@
 package com.msa.rental.application.inputport;
 
+import com.msa.rental.application.outputport.EventOutputPort;
 import com.msa.rental.application.outputport.RentalCardOutputPort;
 import com.msa.rental.application.usecase.ClearOverdueItemUseCase;
 import com.msa.rental.domain.model.RentalCard;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClearOverdueItemInputPort implements ClearOverdueItemUseCase {
 
     private final RentalCardOutputPort rentalCardOutputPort;
+    private final EventOutputPort eventOutputPort;
 
     @Override
     public RentalResultOutputDTO clearOverdue(ClearOverdueInfoDTO clearOverdueInfoDTO) throws Exception {
@@ -22,6 +24,9 @@ public class ClearOverdueItemInputPort implements ClearOverdueItemUseCase {
             .orElseThrow(() -> new IllegalArgumentException("해당 카드가 존재하지 않습니다."));
 
         rentalCard.makeAvailableRental(clearOverdueInfoDTO.getPoint());
+
+        eventOutputPort.occurOverdueClearedEvent(RentalCard.createOverdueCleardEvent(rentalCard.getMember(), clearOverdueInfoDTO.getPoint()));
+
         return RentalResultOutputDTO.mapToDTO(rentalCard);
     }
 }
