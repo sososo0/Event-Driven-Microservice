@@ -3,9 +3,12 @@ package com.msa.member.framework.kafkaadapter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msa.member.application.usecase.SavePointUseCase;
 import com.msa.member.application.usecase.UsePointUseCase;
+import com.msa.member.domain.model.event.BookEventType;
+import com.msa.member.domain.model.event.EventResult;
 import com.msa.member.domain.model.event.ItemRented;
 import com.msa.member.domain.model.event.ItemReturned;
 import com.msa.member.domain.model.event.OverdueCleared;
+import com.msa.member.domain.model.event.PointUseCommand;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -23,6 +26,7 @@ public class MemberEventConsumers {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final SavePointUseCase savePointUseCase;
     private final UsePointUseCase usePointUseCase;
+    private final MemberEventProducer memberEventProducer;
 
     @KafkaListener(topics = "${consumer.topic1.name}", groupId = "${consumer.groupid.name}")
     public void consumeRent(ConsumerRecord<String, String> record) throws IOException {
@@ -45,6 +49,32 @@ public class MemberEventConsumers {
         System.out.println("overdue_clear: " + record.value());
         OverdueCleared overdueCleared = objectMapper.readValue(record.value(), OverdueCleared.class);
 
-        usePointUseCase.userPoint(overdueCleared.getIdName(), overdueCleared.getPoint());
+        EventResult eventResult = new EventResult();
+        eventResult.setEventType(BookEventType.OVERDUE);
+        eventResult.setIdName(overdueCleared.getIdName());
+        eventResult.setPoint(overdueCleared.getPoint());
+
+        System.out.printf(record.value());
+
+        try {
+            usePointUseCase.userPoint(overdueCleared.getIdName(), overdueCleared.getPoint());
+            eventResult.setSuccessful(true);
+        } catch (Exception e ) {
+            eventResult.setSuccessful(false);
+        }
+
+        memberEventProducer.occurEvent(eventResult);
+    }
+
+    @KafkaListener(topics = "${consumer.topic4.name}", groupId = "${consumer.groupid.name}")
+    public void consumeUsePoint(ConsumerRecord<String, String> record) throws Exception {
+        System.out.println("rental_return: " + record.value());
+        PointUseCommand pointUseCommand = objectMapper.readValue(record.value(), PointUseCommand.class);
+
+        try {
+            usePointUseCase.userPoint(pointUseCommand.getIdName(), pointUseCommand.getPoint());
+        } catch(Exception e) {
+            throw e;
+        }
     }
 }
