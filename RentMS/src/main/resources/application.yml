@@ -30,10 +30,10 @@ logging:
     org.hibernate.SQL: debug
 
 producers:
-    bootstrap-servers: localhost:9092
-    topic1:
-      name: rental_rent
-    topic2:
-      name: rental_return
-    topic3:
-      name: overdue_clear
+  bootstrap-servers: localhost:9092
+  topic1:
+    name: rental_rent
+  topic2:
+    name: rental_return
+  topic3:
+    name: overdue_clear
